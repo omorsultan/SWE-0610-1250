@@ -18,7 +18,7 @@ This project is a simple demonstration of drawing a circle using SDL (Simple Dir
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/omorsultan/SWE-0610-1250-TASK-102-.git
+   git clone https://github.com/omorsultan/SWE-0610-1250.git
 2. Navigate to the project directory:
     ```bash
     cd circle-drawing-sdl
