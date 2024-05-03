@@ -11,7 +11,7 @@ This project is a simple demonstration of drawing a circle using SDL (Simple Dir
 ## Prerequisites
 
 - SDL2 development libraries installed on your system.
-- C compiler (GCC recommended) supporting C99 standard.
+- C & C++ compiler (GCC recommended) supporting C99 standard.
 
 ## How to Build and Run
 
@@ -21,13 +21,15 @@ This project is a simple demonstration of drawing a circle using SDL (Simple Dir
    git clone https://github.com/omorsultan/SWE-0610-1250.git
 2. Navigate to the project directory:
     ```bash
-    cd circle-drawing-sdl
-3. Compile the source code:
+    cd SWE-0610-1250
+3. Compile the source code(Using Terminal):
     ```bash
-    gcc main.c -o circle_drawing -lSDL2
+    g++ -I src/include -L src/lib -o TASK101 TASK101.cpp -lmingw32 -lSDL2main -lSDL2
+	g++ -I src/include -L src/lib -o TASK102 TASK102.cpp -lmingw32 -lSDL2main -lSDL2
 4. Run the executable:
     ```bash
-    ./circle_drawing
+    ./TASK101
+    ./TASK102
 
 ## Controls
     Close the application: Click the close button on the window or press Ctrl + C in the terminal.
