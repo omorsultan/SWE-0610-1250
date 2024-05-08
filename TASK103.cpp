@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <math.h>
 
 #define SCREEN_WIDTH 640
@@ -13,7 +14,7 @@ bool initializeSDL(SDL_Window** window, SDL_Renderer** renderer) {
         return false;
     }
 
-    *window = SDL_CreateWindow("Moving Circle", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    *window = SDL_CreateWindow("Moving Circles", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (*window == NULL) {
         printf("Window creation failed: %s\n", SDL_GetError());
         return false;
@@ -28,7 +29,8 @@ bool initializeSDL(SDL_Window** window, SDL_Renderer** renderer) {
     return true;
 }
 
-void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius) {
+void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius, SDL_Color color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     for (int x = -radius; x <= radius; x++) {
         int height = (int)sqrt(radius * radius - x * x);
         for (int y = -height; y <= height; y++) {
@@ -45,8 +47,16 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    int circleX = 0;
-    int circleY = SCREEN_HEIGHT / 2;
+    int circle1X = 0;
+    int circle1Y = SCREEN_HEIGHT / 2;
+
+    int circle2X = SCREEN_WIDTH / 2;
+    int circle2Y = 0;
+
+    int circle2DX = 1; // Direction of movement for circle 2
+    int circle2DY = 1;
+
+    bool collision = false;
 
     SDL_Event event;
     bool running = true;
@@ -55,6 +65,25 @@ int main(int argc, char* argv[]) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
+            } else if (event.type == SDL_KEYDOWN) {
+                switch (event.key.keysym.sym) {
+                    case SDLK_UP:
+                        circle2DY = -1;
+                        circle2DX = 0;
+                        break;
+                    case SDLK_DOWN:
+                        circle2DY = 1;
+                        circle2DX = 0;
+                        break;
+                    case SDLK_LEFT:
+                        circle2DX = -1;
+                        circle2DY = 0;
+                        break;
+                    case SDLK_RIGHT:
+                        circle2DX = 1;
+                        circle2DY = 0;
+                        break;
+                }
             }
         }
 
@@ -62,15 +91,53 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
 
-        // Draw the circle
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        drawCircle(renderer, circleX, circleY, CIRCLE_RADIUS);
-
-        // Update circle position
-        circleX += MOVEMENT_SPEED;
-        if (circleX >= SCREEN_WIDTH + CIRCLE_RADIUS) {
-            circleX = -CIRCLE_RADIUS; // Reset the circle position once it goes off-screen
+        // Update circle 1 position
+        circle1X += MOVEMENT_SPEED;
+        if (circle1X >= SCREEN_WIDTH + CIRCLE_RADIUS) {
+            circle1X = -CIRCLE_RADIUS; // Reset the circle position once it goes off-screen
         }
+
+        // Update circle 2 position
+        circle2X += circle2DX * MOVEMENT_SPEED;
+        circle2Y += circle2DY * MOVEMENT_SPEED;
+        if (circle2X >= SCREEN_WIDTH + CIRCLE_RADIUS || circle2X <= 0 || circle2Y >= SCREEN_HEIGHT + CIRCLE_RADIUS || circle2Y <= 0) {
+            // Start circle 2 from the opposite side upon collision with window edge
+            if (circle2X >= SCREEN_WIDTH + CIRCLE_RADIUS) {
+                circle2X = -CIRCLE_RADIUS;
+            } else if (circle2X <= -CIRCLE_RADIUS) {
+                circle2X = SCREEN_WIDTH + CIRCLE_RADIUS;
+            }
+            
+            if (circle2Y >= SCREEN_HEIGHT + CIRCLE_RADIUS) {
+                circle2Y = -CIRCLE_RADIUS;
+            } else if (circle2Y <= -CIRCLE_RADIUS) {
+                circle2Y = SCREEN_HEIGHT + CIRCLE_RADIUS;
+            }
+        }
+
+        // Check for collision
+        int dx = circle1X - circle2X;
+        int dy = circle1Y - circle2Y;
+        int distance = sqrt(dx * dx + dy * dy);
+        if (distance < 2 * CIRCLE_RADIUS) {
+            collision = true;
+        } else {
+            collision = false;
+        }
+
+        // Draw circle 1
+        SDL_Color black = {0, 0, 0, 255};
+        drawCircle(renderer, circle1X, circle1Y, CIRCLE_RADIUS, black);
+
+        // Draw circle 2
+        SDL_Color red = {255, 0, 0, 255};
+        if (collision) {
+            // Change the color of circle 2 upon collision
+            red.r = 0;
+            red.g = 255;
+            red.b = 0;
+        }
+        drawCircle(renderer, circle2X, circle2Y, CIRCLE_RADIUS, red);
 
         // Present the renderer
         SDL_RenderPresent(renderer);
