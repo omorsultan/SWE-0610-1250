@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
-#include <math.h>
+#include<math.h>
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -25,20 +25,13 @@ bool initializeSDL(SDL_Window** window, SDL_Renderer** renderer) {
 
     return true;
 }
-void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius) {
-    int x = radius, y = 0, err = 0;
-    while (x >= y) {
-        for (int i = -1; i <= 1; i += 2) {
-            for (int j = -1; j <= 1; j += 2) {
-                SDL_RenderDrawPoint(renderer, centerX + i * x, centerY + j * y);
-                SDL_RenderDrawPoint(renderer, centerX + i * y, centerY + j * x);
-            }
-        }
-        y++;
-        err += 1 - 2 * y;
-        if (err <= 0) {
-            x--;
-            err += 2 * x + 1;
+
+void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius, SDL_Color color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    for (int x = -radius; x <= radius; x++) {
+        int height = (int)sqrt(radius * radius - x * x);
+        for (int y = -height; y <= height; y++) {
+            SDL_RenderDrawPoint(renderer, centerX + x, centerY + y);
         }
     }
 }
@@ -65,7 +58,8 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        drawCircle(renderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 200);
+        SDL_Color circleColor = {0, 0, 0, 255};
+        drawCircle(renderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 200, circleColor);
 
         SDL_RenderPresent(renderer);
     }
@@ -76,5 +70,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-

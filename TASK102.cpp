@@ -28,28 +28,12 @@ bool initializeSDL(SDL_Window** window, SDL_Renderer** renderer) {
     return true;
 }
 
-void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius) {
-    int x = radius;
-    int y = 0;
-    int err = 0;
-
-    while (x >= y) {
-        SDL_RenderDrawPoint(renderer, centerX + x, centerY + y);
-        SDL_RenderDrawPoint(renderer, centerX + y, centerY + x);
-        SDL_RenderDrawPoint(renderer, centerX - y, centerY + x);
-        SDL_RenderDrawPoint(renderer, centerX - x, centerY + y);
-        SDL_RenderDrawPoint(renderer, centerX - x, centerY - y);
-        SDL_RenderDrawPoint(renderer, centerX - y, centerY - x);
-        SDL_RenderDrawPoint(renderer, centerX + y, centerY - x);
-        SDL_RenderDrawPoint(renderer, centerX + x, centerY - y);
-
-        if (err <= 0) {
-            y += 1;
-            err += 2 * y + 1;
-        }
-        if (err > 0) {
-            x -= 1;
-            err -= 2 * x + 1;
+void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius, SDL_Color color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    for (int x = -radius; x <= radius; x++) {
+        int height = (int)sqrt(radius * radius - x * x);
+        for (int y = -height; y <= height; y++) {
+            SDL_RenderDrawPoint(renderer, centerX + x, centerY + y);
         }
     }
 }
@@ -68,7 +52,7 @@ int main(int argc, char* argv[]) {
 
     SDL_Event event;
     bool running = true;
- 
+
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -82,11 +66,12 @@ int main(int argc, char* argv[]) {
             radius = INITIAL_RADIUS;
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0);
-        drawCircle(renderer, centerX, centerY, radius);
+        SDL_Color circleColor = {0, 255, 0, 255}; // Green color
+        drawCircle(renderer, centerX, centerY, radius, circleColor);
 
         SDL_RenderPresent(renderer);
     }
