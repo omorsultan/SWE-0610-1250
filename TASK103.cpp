@@ -6,7 +6,7 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define CIRCLE_RADIUS 20
-#define MOVEMENT_SPEED 4// Double the movement speed for the red circle
+#define MOVEMENT_SPEED 4
 
 bool initializeSDL(SDL_Window** window, SDL_Renderer** renderer) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     int circle1Y = SCREEN_HEIGHT / 2;
 
     int circle2X = SCREEN_WIDTH / 2;
-    int circle2Y = SCREEN_HEIGHT;
+    int circle2Y = 0;
 
     bool collision = false;
 
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
             if (event.type == SDL_QUIT) {
                 running = false;
             } else if (event.type == SDL_KEYDOWN) {
-                // Handle key inputs for moving circle 2
+               
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
                         circle2Y -= 2*MOVEMENT_SPEED;
@@ -81,17 +81,17 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        // Clear the screen
+     
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
 
-        // Update circle 1 position
+     
         circle1X += MOVEMENT_SPEED;
         if (circle1X >= SCREEN_WIDTH + CIRCLE_RADIUS) {
             circle1X = -CIRCLE_RADIUS; // Reset the circle position once it goes off-screen
         }
 
-        // Check for collision
+       
         int dx = circle1X - circle2X;
         int dy = circle1Y - circle2Y;
         int distance = sqrt(dx * dx + dy * dy);
@@ -101,21 +101,21 @@ int main(int argc, char* argv[]) {
             collision = false;
         }
 
-        // Draw circle 1
+       
         SDL_Color black = {0, 0, 0, 255};
         drawCircle(renderer, circle1X, circle1Y, CIRCLE_RADIUS, black);
 
-        // Draw circle 2
+
         SDL_Color red = {255, 0, 0, 255};
         if (collision) {
-            // Change the color of circle 2 upon collision
+          
             red.r = 0;
             red.g = 255;
             red.b = 0;
         }
         drawCircle(renderer, circle2X, circle2Y, CIRCLE_RADIUS, red);
 
-        // Present the renderer
+        
         SDL_RenderPresent(renderer);
     }
 
