@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 
     SDL_Event event;
     bool running = true;
-
+ 
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -78,6 +78,8 @@ int main(int argc, char* argv[]) {
 
         // Increase the radius
         radius += RADIUS_INCREMENT;
+       
+       
 
         // Check collision with window boundaries
         if (centerX + radius >= SCREEN_WIDTH || centerY + radius >= SCREEN_HEIGHT || centerX - radius <= 0 || centerY - radius <= 0) {

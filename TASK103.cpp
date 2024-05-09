@@ -51,9 +51,9 @@ int main(int argc, char* argv[]) {
     int circle1Y = SCREEN_HEIGHT / 2;
 
     int circle2X = SCREEN_WIDTH / 2;
-    int circle2Y = 0;
+    int circle2Y = SCREEN_HEIGHT / 2;
 
-    int circle2DX = 1; // Direction of movement for circle 2
+    int circle2DX = 0; // Direction of movement for circle 2
     int circle2DY = 1;
 
     bool collision = false;
