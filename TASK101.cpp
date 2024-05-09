@@ -25,29 +25,20 @@ bool initializeSDL(SDL_Window** window, SDL_Renderer** renderer) {
 
     return true;
 }
-
 void drawCircle(SDL_Renderer* renderer, int centerX, int centerY, int radius) {
-    int x = radius;
-    int y = 0;
-    int err = 0;
-
+    int x = radius, y = 0, err = 0;
     while (x >= y) {
-        SDL_RenderDrawPoint(renderer, centerX + x, centerY + y);
-        SDL_RenderDrawPoint(renderer, centerX + y, centerY + x);
-        SDL_RenderDrawPoint(renderer, centerX - y, centerY + x);
-        SDL_RenderDrawPoint(renderer, centerX - x, centerY + y);
-        SDL_RenderDrawPoint(renderer, centerX - x, centerY - y);
-        SDL_RenderDrawPoint(renderer, centerX - y, centerY - x);
-        SDL_RenderDrawPoint(renderer, centerX + y, centerY - x);
-        SDL_RenderDrawPoint(renderer, centerX + x, centerY - y);
-
-        if (err <= 0) {
-            y += 1;
-            err += 2 * y + 1;
+        for (int i = -1; i <= 1; i += 2) {
+            for (int j = -1; j <= 1; j += 2) {
+                SDL_RenderDrawPoint(renderer, centerX + i * x, centerY + j * y);
+                SDL_RenderDrawPoint(renderer, centerX + i * y, centerY + j * x);
+            }
         }
-        if (err > 0) {
-            x -= 1;
-            err -= 2 * x + 1;
+        y++;
+        err += 1 - 2 * y;
+        if (err <= 0) {
+            x--;
+            err += 2 * x + 1;
         }
     }
 }
