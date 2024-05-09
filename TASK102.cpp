@@ -86,10 +86,10 @@ int main(int argc, char* argv[]) {
             radius = INITIAL_RADIUS;
         }
 
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
         SDL_RenderClear(renderer);
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0);
         drawCircle(renderer, centerX, centerY, radius);
 
         SDL_RenderPresent(renderer);

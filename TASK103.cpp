@@ -5,8 +5,8 @@
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
-#define CIRCLE_RADIUS 50
-#define MOVEMENT_SPEED 5
+#define CIRCLE_RADIUS 20
+#define MOVEMENT_SPEED 4// Double the movement speed for the red circle
 
 bool initializeSDL(SDL_Window** window, SDL_Renderer** renderer) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -51,10 +51,7 @@ int main(int argc, char* argv[]) {
     int circle1Y = SCREEN_HEIGHT / 2;
 
     int circle2X = SCREEN_WIDTH / 2;
-    int circle2Y = SCREEN_HEIGHT / 2;
-
-    int circle2DX = 0; // Direction of movement for circle 2
-    int circle2DY = 1;
+    int circle2Y = SCREEN_HEIGHT;
 
     bool collision = false;
 
@@ -66,22 +63,19 @@ int main(int argc, char* argv[]) {
             if (event.type == SDL_QUIT) {
                 running = false;
             } else if (event.type == SDL_KEYDOWN) {
+                // Handle key inputs for moving circle 2
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
-                        circle2DY = -1;
-                        circle2DX = 0;
+                        circle2Y -= 2*MOVEMENT_SPEED;
                         break;
                     case SDLK_DOWN:
-                        circle2DY = 1;
-                        circle2DX = 0;
+                        circle2Y += 2*MOVEMENT_SPEED;
                         break;
                     case SDLK_LEFT:
-                        circle2DX = -1;
-                        circle2DY = 0;
+                        circle2X -= 3*MOVEMENT_SPEED;
                         break;
                     case SDLK_RIGHT:
-                        circle2DX = 1;
-                        circle2DY = 0;
+                        circle2X += 3*MOVEMENT_SPEED;
                         break;
                 }
             }
@@ -95,24 +89,6 @@ int main(int argc, char* argv[]) {
         circle1X += MOVEMENT_SPEED;
         if (circle1X >= SCREEN_WIDTH + CIRCLE_RADIUS) {
             circle1X = -CIRCLE_RADIUS; // Reset the circle position once it goes off-screen
-        }
-
-        // Update circle 2 position
-        circle2X += circle2DX * MOVEMENT_SPEED;
-        circle2Y += circle2DY * MOVEMENT_SPEED;
-        if (circle2X >= SCREEN_WIDTH + CIRCLE_RADIUS || circle2X <= 0 || circle2Y >= SCREEN_HEIGHT + CIRCLE_RADIUS || circle2Y <= 0) {
-            // Start circle 2 from the opposite side upon collision with window edge
-            if (circle2X >= SCREEN_WIDTH + CIRCLE_RADIUS) {
-                circle2X = -CIRCLE_RADIUS;
-            } else if (circle2X <= -CIRCLE_RADIUS) {
-                circle2X = SCREEN_WIDTH + CIRCLE_RADIUS;
-            }
-            
-            if (circle2Y >= SCREEN_HEIGHT + CIRCLE_RADIUS) {
-                circle2Y = -CIRCLE_RADIUS;
-            } else if (circle2Y <= -CIRCLE_RADIUS) {
-                circle2Y = SCREEN_HEIGHT + CIRCLE_RADIUS;
-            }
         }
 
         // Check for collision
