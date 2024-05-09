@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        drawCircle(renderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 100);
+        drawCircle(renderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 200);
 
         SDL_RenderPresent(renderer);
     }
@@ -85,3 +85,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+// Draw a circle defining its xy-coordinates(center of the window) & radius.
